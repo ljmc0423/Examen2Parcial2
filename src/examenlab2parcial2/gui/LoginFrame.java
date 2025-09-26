@@ -24,7 +24,6 @@ public class LoginFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        //  Panel principal con fondo azul marino degradado
         JPanel mainPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -40,7 +39,6 @@ public class LoginFrame extends JFrame {
         };
         mainPanel.setLayout(new GridBagLayout());
 
-        // 📦 Formulario centrado
         JPanel formPanel = new JPanel(new GridLayout(4,1,15,15));
         formPanel.setOpaque(false);
         formPanel.setPreferredSize(new Dimension(400, 300));
@@ -77,7 +75,6 @@ public class LoginFrame extends JFrame {
         btnRegister.addActionListener(e -> new RegisterFrame(steam).setVisible(true));
     }
 
-    // 🎨 TextFields modernos con placeholder
     private void styleTextField(JTextField field, String placeholder) {
         field.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         field.setHorizontalAlignment(JTextField.CENTER);
@@ -103,7 +100,6 @@ public class LoginFrame extends JFrame {
         });
     }
 
-    // 🎨 Botones modernos con texto negro
     private JButton createButton(String text, Color bg) {
         JButton b = new JButton(text);
         b.setBackground(bg);

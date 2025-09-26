@@ -84,7 +84,7 @@ public class AdminFrame extends JFrame {
         btnReports = createModernButton("Reportes Clientes", new Color(220, 120, 85));
         btnCatalog = createModernButton("Ver Catálogo", new Color(123, 104, 238));
         btnRegresar = createModernButton("Regresar", new Color(255, 255, 255));
-        
+        btnRegresar.setForeground(Color.BLACK);
 
         gbc.gridwidth = 1;
         gbc.gridy = 1; gbc.gridx = 0; panel.add(btnGames, gbc);
@@ -92,7 +92,6 @@ public class AdminFrame extends JFrame {
         gbc.gridy = 2; gbc.gridx = 0; panel.add(btnReports, gbc);
         gbc.gridy = 2; gbc.gridx = 1; panel.add(btnCatalog, gbc);
 
-        // Add the "Regresar" button in a new row spanning both columns
         gbc.gridwidth = 2;
         gbc.gridy = 3;
         gbc.gridx = 0;
