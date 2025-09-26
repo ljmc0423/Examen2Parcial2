@@ -4,14 +4,15 @@
  */
 package examenlab2parcial2.gui;
 
-
 import examenlab2parcial2.Steam;
+
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.IOException;
 
 public class DownloadFrame extends JFrame {
-    private JTextField txtCodigo;
+    private JTextField txtGameCode;
+    private JComboBox<String> cmbSO;
     private JButton btnDescargar;
     private Steam steam;
     private String username;
@@ -22,65 +23,66 @@ public class DownloadFrame extends JFrame {
 
         setTitle("Descargar Juego");
         setSize(400, 200);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10));
-        panel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        panel.setBackground(new Color(30, 30, 30));
+        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
+        panel.setBackground(new Color(40, 40, 40));
 
-        panel.add(label("Código del juego:"));
-        txtCodigo = new JTextField();
-        panel.add(txtCodigo);
+        JLabel lblCode = new JLabel("Código de Juego:");
+        lblCode.setForeground(Color.WHITE);
+        txtGameCode = new JTextField();
 
-        btnDescargar = new JButton("⬇ Descargar");
-        btnDescargar.setBackground(new Color(67, 181, 129));
+        JLabel lblSO = new JLabel("Sistema Operativo:");
+        lblSO.setForeground(Color.WHITE);
+        cmbSO = new JComboBox<>(new String[]{"Windows", "Mac", "Linux"});
+
+        btnDescargar = new JButton("Descargar");
+        btnDescargar.setBackground(new Color(34, 139, 34));
         btnDescargar.setForeground(Color.WHITE);
-        btnDescargar.setFont(new Font("Segoe UI", Font.BOLD, 16));
+
+        panel.add(lblCode);
+        panel.add(txtGameCode);
+        panel.add(lblSO);
+        panel.add(cmbSO);
+        panel.add(new JLabel());
         panel.add(btnDescargar);
 
-        btnDescargar.addActionListener(e -> {
-            try {
-                int gameCode = Integer.parseInt(txtCodigo.getText());
-                boolean ok = steam.downloadGame(gameCode, buscarPlayerCode(steam, username), 'W');
-                if (ok) {
-                    JOptionPane.showMessageDialog(this, "✅ Descarga completada");
-                } else {
-                    JOptionPane.showMessageDialog(this, "❌ No se pudo descargar");
-                }
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
-            }
-        });
-
         add(panel);
+
+        btnDescargar.addActionListener(e -> descargarJuego());
     }
 
-    private JLabel label(String text) {
-        JLabel l = new JLabel(text);
-        l.setForeground(Color.WHITE);
-        l.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        return l;
-    }
+    private void descargarJuego() {
+        try {
+            int gameCode = Integer.parseInt(txtGameCode.getText());
+            int playerCode = steam.buscarPlayerCode(username);
 
-    private int buscarPlayerCode(Steam steam, String username) throws Exception {
-        steam.playersFile.seek(0);
-        while (steam.playersFile.getFilePointer() < steam.playersFile.length()) {
-            int code = steam.playersFile.readInt();
-            String u = steam.playersFile.readUTF();
-            steam.playersFile.readUTF(); // password
-            steam.playersFile.readUTF(); // nombre
-            steam.playersFile.readLong(); // nac
-            steam.playersFile.readInt(); // downloads
-            int imgSize = steam.playersFile.readInt();
-            steam.playersFile.skipBytes(imgSize);
-            steam.playersFile.readUTF(); // tipo
-            steam.playersFile.readBoolean(); // estado
-
-            if (u.equals(username)) {
-                return code;
+            if (playerCode == -1) {
+                JOptionPane.showMessageDialog(this, "Usuario no encontrado.");
+                return;
             }
+
+            char os;
+            switch (cmbSO.getSelectedItem().toString()) {
+                case "Windows": os = 'W'; break;
+                case "Mac": os = 'M'; break;
+                case "Linux": os = 'L'; break;
+                default: os = 'W'; break;
+            }
+
+            boolean ok = steam.downloadGame(gameCode, playerCode, os);
+            if (ok) {
+                JOptionPane.showMessageDialog(this, "Descarga completada con éxito ✅");
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo descargar el juego. Verifique edad, SO o código.");
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Código inválido.");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Error en descarga: " + ex.getMessage());
         }
-        throw new Exception("Usuario no encontrado");
     }
 }
+
 

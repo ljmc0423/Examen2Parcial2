@@ -5,50 +5,58 @@
 package examenlab2parcial2.gui;
 
 import examenlab2parcial2.Steam;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.IOException;
 
 public class CatalogFrame extends JFrame {
-    private JTable table;
+    private JTable tabla;
+    private DefaultTableModel modelo;
+    private Steam steam;
 
     public CatalogFrame(Steam steam) {
+        this.steam = steam;
+
         setTitle("Catálogo de Juegos");
-        setSize(700, 450);
+        setSize(700, 400);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        String[] columnas = {"Código", "Título", "Género", "SO", "Edad", "Precio", "Descargas"};
-        DefaultTableModel model = new DefaultTableModel(columnas, 0);
-        table = new JTable(model);
+        modelo = new DefaultTableModel(new Object[]{"Código", "Título", "Género", "SO", "Edad mínima", "Precio", "Descargas"}, 0);
+        tabla = new JTable(modelo);
+        JScrollPane scroll = new JScrollPane(tabla);
 
-        // estilo tabla
-        table.setBackground(new Color(45, 58, 78));
-        table.setForeground(Color.WHITE);
-        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        table.getTableHeader().setBackground(new Color(30, 30, 30));
-        table.getTableHeader().setForeground(new Color(102, 192, 244));
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        add(scroll, BorderLayout.CENTER);
 
+        cargarCatalogo();
+    }
+
+    private void cargarCatalogo() {
         try {
-            steam.gamesFile.seek(0);
-            while (steam.gamesFile.getFilePointer() < steam.gamesFile.length()) {
-                int code = steam.gamesFile.readInt();
-                String title = steam.gamesFile.readUTF();
-                String genre = steam.gamesFile.readUTF();
-                char os = steam.gamesFile.readChar();
-                int edad = steam.gamesFile.readInt();
-                double price = steam.gamesFile.readDouble();
-                int downloads = steam.gamesFile.readInt();
-                int imgSize = steam.gamesFile.readInt();
-                steam.gamesFile.skipBytes(imgSize);
+            steam.printGames(); // imprime en consola
+            modelo.setRowCount(0); // limpiar tabla
 
-                model.addRow(new Object[]{code, title, genre, os, edad, price, downloads});
+            // Leer juegos directamente del archivo
+            var raf = new java.io.RandomAccessFile("steam/games.stm", "r");
+            raf.seek(0);
+            while (raf.getFilePointer() < raf.length()) {
+                int code = raf.readInt();
+                String title = raf.readUTF();
+                String genre = raf.readUTF();
+                char os = raf.readChar();
+                int edad = raf.readInt();
+                double price = raf.readDouble();
+                int downloads = raf.readInt();
+                int imgSize = raf.readInt();
+                raf.skipBytes(imgSize);
+
+                modelo.addRow(new Object[]{code, title, genre, os, edad, price, downloads});
             }
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Error cargando catálogo: " + ex.getMessage());
+            raf.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error cargando catálogo: " + e.getMessage());
         }
-
-        add(new JScrollPane(table));
     }
 }
