@@ -56,7 +56,7 @@ public class DownloadFrame extends JFrame {
     private void descargarJuego() {
         try {
             int gameCode = Integer.parseInt(txtGameCode.getText());
-            int playerCode = steam.buscarPlayerCode(username);
+            int playerCode = steam.findPlayerByCode(username);
 
             if (playerCode == -1) {
                 JOptionPane.showMessageDialog(this, "Usuario no encontrado.");
