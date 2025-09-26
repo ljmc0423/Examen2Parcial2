@@ -73,9 +73,9 @@ public class Steam {
         gamesFile.writeChar(os);
         gamesFile.writeInt(minAge);
         gamesFile.writeDouble(price);
-        gamesFile.writeInt(0); // contador downloads
+        gamesFile.writeInt(0); //contador downloads
 
-        // guardar imagen como array de bytes
+        //imagen guardada como bytes y su tamaño debido a tamaño impredecible
         if (imageBytes != null) {
             gamesFile.writeInt(imageBytes.length);
             gamesFile.write(imageBytes);
@@ -84,7 +84,6 @@ public class Steam {
         }
     }
 
-    // ================== ADD PLAYER =====================
     public void addPlayer(String username, String password, String nombre, long nacimiento, byte[] imageBytes, String tipoUsuario, boolean estado) throws IOException {
         int code = nextPlayerCode();
         playersFile.seek(playersFile.length());
@@ -93,7 +92,7 @@ public class Steam {
         playersFile.writeUTF(password);
         playersFile.writeUTF(nombre);
         playersFile.writeLong(nacimiento);
-        playersFile.writeInt(0); // contador downloads
+        playersFile.writeInt(0);//contador downloads
 
         if (imageBytes != null) {
             playersFile.writeInt(imageBytes.length);
@@ -106,9 +105,8 @@ public class Steam {
         playersFile.writeBoolean(estado);
     }
 
-    // ================== DOWNLOAD GAME =====================
     public boolean downloadGame(int gameCode, int clientCode, char os) throws IOException {
-        // buscar juego
+        //buscar juego
         gamesFile.seek(0);
         boolean gameFound = false;
         String gameName = "";
@@ -121,11 +119,11 @@ public class Steam {
             long pos = gamesFile.getFilePointer();
             int code = gamesFile.readInt();
             String titulo = gamesFile.readUTF();
-            String genero = gamesFile.readUTF();
+            gamesFile.readUTF();//genero
             char gOS = gamesFile.readChar();
             int edad = gamesFile.readInt();
             double pr = gamesFile.readDouble();
-            int downloads = gamesFile.readInt();
+            gamesFile.readInt();//downloads
 
             int imgSize = gamesFile.readInt();
             gamesFile.skipBytes(imgSize);
@@ -141,9 +139,11 @@ public class Steam {
             }
         }
 
-        if (!gameFound) return false;
+        if (!gameFound){
+            return false;
+        }
 
-        // buscar cliente
+        //buscar cliente
         playersFile.seek(0);
         boolean clientFound = false;
         String playerName = "";
@@ -153,11 +153,11 @@ public class Steam {
         while (playersFile.getFilePointer() < playersFile.length()) {
             long pos = playersFile.getFilePointer();
             int code = playersFile.readInt();
-            String user = playersFile.readUTF();
-            String pass = playersFile.readUTF();
+            playersFile.readUTF();//user
+            playersFile.readUTF();//password
             String nombre = playersFile.readUTF();
             long nac = playersFile.readLong();
-            int downloads = playersFile.readInt();
+            playersFile.readInt();//downloads
 
             int imgSize = playersFile.readInt();
             playersFile.skipBytes(imgSize);
@@ -174,16 +174,21 @@ public class Steam {
             }
         }
 
-        if (!clientFound) return false;
+        if (!clientFound){//existe cliente
+            return false;
+        }
 
-        // validar SO
-        if (sistema != os) return false;
+        if (sistema != os){//os compatible
+            return false;
+        }
 
-        // validar edad
+        //validar edad
         int edad = calcularEdad(nacimiento);
-        if (edad < edadMin) return false;
+        if (edad < edadMin){
+            return false;
+        }
 
-        // generar archivo download
+        //archivo download
         int downCode = nextDownloadCode();
         File dFile = new File(downloadsDir, "download_" + downCode + ".stm");
         try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(dFile))) {
@@ -196,33 +201,33 @@ public class Steam {
             dos.writeLong(System.currentTimeMillis());
         }
 
-        // actualizar contador downloads en juego
+        //actualizar contador downloads en game
         if (gamePos >= 0) {
             gamesFile.seek(gamePos);
-            gamesFile.readInt(); // skip code
-            gamesFile.readUTF(); // skip title
+            gamesFile.readInt();//skips
+            gamesFile.readUTF();
             gamesFile.readUTF();
             gamesFile.readChar();
             gamesFile.readInt();
             gamesFile.readDouble();
             long counterPos = gamesFile.getFilePointer();
-            int d = gamesFile.readInt();
+            int dl = gamesFile.readInt();
             gamesFile.seek(counterPos);
-            gamesFile.writeInt(d + 1);
+            gamesFile.writeInt(dl + 1);
         }
 
-        // actualizar contador downloads en player
+        //actualizar contador downloads en player
         if (playerPos >= 0) {
             playersFile.seek(playerPos);
-            playersFile.readInt(); // skip code
+            playersFile.readInt();//skips
             playersFile.readUTF();
             playersFile.readUTF();
             playersFile.readUTF();
             playersFile.readLong();
             long counterPos = playersFile.getFilePointer();
-            int d = playersFile.readInt();
+            int dl = playersFile.readInt();
             playersFile.seek(counterPos);
-            playersFile.writeInt(d + 1);
+            playersFile.writeInt(dl + 1);
         }
 
         return true;
@@ -238,13 +243,13 @@ public class Steam {
             gamesFile.readChar();
             gamesFile.readInt();
             long pricePos = gamesFile.getFilePointer();
-            double oldPrice = gamesFile.readDouble();
+            gamesFile.readDouble();//precio viejo
             if (code == codeGame) {
                 gamesFile.seek(pricePos);
                 gamesFile.writeDouble(newPrice);
                 return true;
             }
-            int d = gamesFile.readInt();
+            gamesFile.readInt();//descargas ///////////////////
             int imgSize = gamesFile.readInt();
             gamesFile.skipBytes(imgSize);
         }
@@ -264,7 +269,7 @@ public class Steam {
             int imgSize = gamesFile.readInt();
             gamesFile.skipBytes(imgSize);
 
-            System.out.println("[" + code + "] " + title + " | " + genre + " | SO: " + os + " | Edad mínima: " + edad + " | Precio: $" + price + " | Downloads: " + downloads);
+            System.out.println("[" + code + "] " + title + " | " + genre + " | SO: " + os + " | Edad minima: " + edad + " | Precio: $" + price + " | Descargas: " + downloads);
         }
     }
 
