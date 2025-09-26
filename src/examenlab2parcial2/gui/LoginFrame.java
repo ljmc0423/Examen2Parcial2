@@ -24,7 +24,7 @@ public class LoginFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // 🎨 Panel principal con fondo azul marino degradado
+        //  Panel principal con fondo azul marino degradado
         JPanel mainPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
