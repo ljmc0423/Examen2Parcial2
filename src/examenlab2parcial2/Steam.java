@@ -46,7 +46,7 @@ public class Steam {
         }
     }
 
-    // ---- códigos ----
+    //hilos
     private synchronized int nextCode(int index) throws IOException {
         codesFile.seek(index * 4);
         int code = codesFile.readInt();

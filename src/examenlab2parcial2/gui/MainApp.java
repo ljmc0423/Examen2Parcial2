@@ -5,14 +5,21 @@
 package examenlab2parcial2.gui;
 
 import examenlab2parcial2.Steam;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
-import examenlab2parcial2.gui.LoginFrame;
 
 public class MainApp {
     public static void main(String[] args) {
-        Steam steam = new Steam();
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            new LoginFrame(steam).setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            try {
+                Steam steam = new Steam(); // inicializa tu clase Steam
+                new MainMenuFrame(steam).setVisible(true); // abrimos menú principal
+            } catch (Exception e) {
+                e.getMessage();
+                JOptionPane.showMessageDialog(null, "Error al iniciar la aplicación:\n" + e.getMessage());
+            }
         });
     }
 }
+
