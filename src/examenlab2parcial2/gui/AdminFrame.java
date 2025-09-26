@@ -2,16 +2,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package examenlab2parcial2.Gui;
+package examenlab2parcial2.gui;
 
-
+import examenlab2parcial2.Steam;
 import javax.swing.*;
 import java.awt.*;
 
-public class AdminMenuFrame extends JFrame {
-    public JButton btnGames, btnPlayers, btnReports, btnCatalog;
+public class AdminFrame extends JFrame {
+    private JButton btnGames, btnPlayers, btnReports, btnCatalog;
+    private Steam steam;
 
-    public AdminMenuFrame() {
+    public AdminFrame(Steam steam) {
+        this.steam = steam;
+
         setTitle("Steam - Administrador");
         setSize(600, 400);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -30,3 +33,4 @@ public class AdminMenuFrame extends JFrame {
 
     private JButton button(String text){ JButton b=new JButton(text); b.setBackground(new Color(70,130,180)); b.setForeground(Color.WHITE); return b; }
 }
+
