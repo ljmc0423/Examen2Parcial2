@@ -8,7 +8,7 @@ package examenlab2parcial2;
  *
  * @author ljmc2
  */
-public class ExamenLab2Parcial2 {
+public class Main {
 
     /**
      * @param args the command line arguments
