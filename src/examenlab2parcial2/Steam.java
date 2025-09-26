@@ -19,7 +19,7 @@ public class Steam {
 
     private File baseDir;
     private File downloadsDir;
-
+    
     private final SimpleDateFormat DOWNLOAD_DATE_FMT = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     private final SimpleDateFormat REPORT_DATE_FMT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -67,9 +67,11 @@ public class Steam {
         return nextCode(2);
     }
 
-    // ---- add ----
     public void addGame(String title, String genre, char os, int minAge, double price, byte[] imageBytes) throws IOException {
         int code = nextGameCode();
+        if (findGameByTitle(title) != null) {
+            throw new IOException("Título de juego ya existe");
+        }
         gamesFile.seek(gamesFile.length());
         gamesFile.writeInt(code);
         gamesFile.writeUTF(title);
@@ -86,9 +88,34 @@ public class Steam {
             gamesFile.writeInt(0);
         }
     }
+    //método para verificar titulo unico
+    private Game findGameByTitle(String title) throws IOException {
+        gamesFile.seek(0);
+        while (gamesFile.getFilePointer() < gamesFile.length()) {
+            long pos = gamesFile.getFilePointer();
+            int code = gamesFile.readInt();
+            String gTitle = gamesFile.readUTF();
+            String genre = gamesFile.readUTF();
+            gamesFile.readChar();
+            gamesFile.readInt();
+            gamesFile.readDouble();
+            gamesFile.readInt();
+            int imgSize = gamesFile.readInt();
+            gamesFile.skipBytes(imgSize);
+
+            if (gTitle.equalsIgnoreCase(title)) {
+                return new Game(code, gTitle, genre, ' ', 0, 0, 0, null, pos);
+            }
+        }
+        return null;
+    }
 
     public void addPlayer(String username, String password, String nombre, long nacimiento, byte[] imageBytes, String tipoUsuario, boolean estado) throws IOException {
         int code = nextPlayerCode();
+        if (findPlayerByUsername(username) != null) {
+            throw new IOException("Username ya existe");
+        }
+        
         playersFile.seek(playersFile.length());
         playersFile.writeInt(code);
         playersFile.writeUTF(username);
@@ -106,6 +133,28 @@ public class Steam {
 
         playersFile.writeUTF(tipoUsuario);
         playersFile.writeBoolean(estado);
+    }
+    
+    private Player findPlayerByUsername(String username) throws IOException {
+        playersFile.seek(0);
+        while (playersFile.getFilePointer() < playersFile.length()) {
+            long pos = playersFile.getFilePointer();
+            int code = playersFile.readInt();
+            String user = playersFile.readUTF();
+            playersFile.readUTF();//contra
+            playersFile.readUTF();//nombre
+            playersFile.readLong();//nacimiento
+            playersFile.readInt();//dwnlds
+            int imgSize = playersFile.readInt();
+            playersFile.skipBytes(imgSize);
+            playersFile.readUTF();//tipoUsuario
+            playersFile.readBoolean();//estado
+
+            if (user.equalsIgnoreCase(username)) {
+                return new Player(code, user, "", "", 0, 0, null, "", true, pos);
+            }
+        }
+        return null;
     }
 
     //buscadores para frames
@@ -490,20 +539,18 @@ public class Steam {
         gamesFile.seek(0);
         while (gamesFile.getFilePointer() < gamesFile.length()) {
             int code = gamesFile.readInt();
-            gamesFile.getFilePointer();//genero
             gamesFile.readUTF();//titulo
             String genre = gamesFile.readUTF();
+            gamesFile.readChar();
+            gamesFile.readInt();
+            gamesFile.readDouble();
+            gamesFile.readInt();
+            int imgSize = gamesFile.readInt();
+            gamesFile.skipBytes(imgSize);
 
             if (code == gameCode) {
                 return genre;
             }
-
-            gamesFile.readChar();//os
-            gamesFile.readInt();//edad min
-            gamesFile.readDouble();//precio
-            gamesFile.readInt();//contador dwnlds
-            int imgSize = gamesFile.readInt();
-            gamesFile.skipBytes(imgSize);
         }
         return null;
     }
@@ -753,6 +800,27 @@ public class Steam {
         Player p = findPlayerByCode(playerCode);
         if (p == null) return false;
         return "ADMIN".equalsIgnoreCase(p.tipoUsuario);
+    }
+    
+    public int login(String username, String password) throws IOException {
+        playersFile.seek(0);
+        while (playersFile.getFilePointer() < playersFile.length()) {
+            int code = playersFile.readInt();
+            String uName = playersFile.readUTF();
+            String pass = playersFile.readUTF();
+            playersFile.readUTF();//nombre
+            playersFile.readLong();//nacimiento
+            playersFile.readInt();//dwnlds
+            int imgSize = playersFile.readInt();
+            playersFile.skipBytes(imgSize);
+            playersFile.readUTF();//tipoUsuario
+            playersFile.readBoolean();//estado
+
+            if (uName.equals(username) && pass.equals(password)) {
+                return code;
+            }
+        }
+        return -1;
     }
 
     //cerrar archivos
