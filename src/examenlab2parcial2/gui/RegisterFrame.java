@@ -68,61 +68,81 @@ public class RegisterFrame extends JFrame {
         gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.WEST;
 
-        // Nombre
-        gbc.gridx = 0; gbc.gridy = 1;
-        formPanel.add(new JLabel("Nombre completo"), gbc);
-        txtNombre = new JTextField(18);
-        gbc.gridx = 1; formPanel.add(txtNombre, gbc);
+// Nombre
+gbc.gridx = 0; gbc.gridy = 1;
+JLabel lblNombre = new JLabel("Nombre completo");
+lblNombre.setForeground(Color.WHITE);
+formPanel.add(lblNombre, gbc);
 
-        // Usuario
-        gbc.gridx = 0; gbc.gridy = 2;
-        formPanel.add(new JLabel("Usuario"), gbc);
-        txtUser = new JTextField(18);
-        gbc.gridx = 1; formPanel.add(txtUser, gbc);
+txtNombre = new JTextField(18);
+gbc.gridx = 1; formPanel.add(txtNombre, gbc);
 
-        // Contraseña
-        gbc.gridx = 0; gbc.gridy = 3;
-        formPanel.add(new JLabel("Contraseña"), gbc);
-        txtPassword = new JPasswordField(18);
-        gbc.gridx = 1; formPanel.add(txtPassword, gbc);
+// Usuario
+gbc.gridx = 0; gbc.gridy = 2;
+JLabel lblUser = new JLabel("Usuario");
+lblUser.setForeground(Color.WHITE);
+formPanel.add(lblUser, gbc);
 
-        // Fecha de nacimiento
-        gbc.gridx = 0; gbc.gridy = 4;
-        formPanel.add(new JLabel("Fecha de nacimiento"), gbc);
-        fechaNacimiento = new JFormattedTextField(new java.text.SimpleDateFormat("dd/MM/yyyy"));
-        fechaNacimiento.setValue(new Date());
-        fechaNacimiento.setColumns(12);
-        gbc.gridx = 1; formPanel.add(fechaNacimiento, gbc);
+txtUser = new JTextField(18);
+gbc.gridx = 1; formPanel.add(txtUser, gbc);
 
-        // Tipo de cuenta
-        gbc.gridx = 0; gbc.gridy = 5;
-        formPanel.add(new JLabel("Tipo de cuenta"), gbc);
-        cmbTipo = new JComboBox<>(new String[]{"NORMAL", "ADMIN"});
-        gbc.gridx = 1; formPanel.add(cmbTipo, gbc);
+// Contraseña
+gbc.gridx = 0; gbc.gridy = 3;
+JLabel lblPass = new JLabel("Contraseña");
+lblPass.setForeground(Color.WHITE);
+formPanel.add(lblPass, gbc);
 
-        // Foto
-        gbc.gridx = 0; gbc.gridy = 6;
-        formPanel.add(new JLabel("Foto de perfil"), gbc);
-        btnFoto = new JButton("Seleccionar foto");
-        lblFotoStatus = new JLabel("Ningún archivo seleccionado");
-        gbc.gridx = 1; formPanel.add(btnFoto, gbc);
+txtPassword = new JPasswordField(18);
+gbc.gridx = 1; formPanel.add(txtPassword, gbc);
 
-        // Status debajo del botón
-        gbc.gridx = 1; gbc.gridy = 7;
-        formPanel.add(lblFotoStatus, gbc);
+// Fecha de nacimiento
+gbc.gridx = 0; gbc.gridy = 4;
+JLabel lblFecha = new JLabel("Fecha de nacimiento");
+lblFecha.setForeground(Color.WHITE);
+formPanel.add(lblFecha, gbc);
 
-        // Preview debajo de todo el formulario
-        lblFotoPreview = new JLabel();
-        lblFotoPreview.setPreferredSize(new Dimension(150, 150));
-        lblFotoPreview.setHorizontalAlignment(JLabel.CENTER);
-        lblFotoPreview.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        gbc.gridx = 0; gbc.gridy = 8; gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        formPanel.add(lblFotoPreview, gbc);
+fechaNacimiento = new JFormattedTextField(new java.text.SimpleDateFormat("dd/MM/yyyy"));
+fechaNacimiento.setValue(new Date());
+fechaNacimiento.setColumns(12);
+gbc.gridx = 1; formPanel.add(fechaNacimiento, gbc);
 
-        // Botones
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 15, 0));
-        buttonPanel.setOpaque(false);
+// Tipo de cuenta
+gbc.gridx = 0; gbc.gridy = 5;
+JLabel lblTipo = new JLabel("Tipo de cuenta");
+lblTipo.setForeground(Color.WHITE);
+formPanel.add(lblTipo, gbc);
+
+cmbTipo = new JComboBox<>(new String[]{"NORMAL", "ADMIN"});
+gbc.gridx = 1; formPanel.add(cmbTipo, gbc);
+
+// Foto
+gbc.gridx = 0; gbc.gridy = 6;
+JLabel lblFoto = new JLabel("Foto de perfil");
+lblFoto.setForeground(Color.WHITE);
+formPanel.add(lblFoto, gbc);
+
+btnFoto = new JButton("Seleccionar foto");
+lblFotoStatus = new JLabel("Ningún archivo seleccionado");
+lblFotoStatus.setForeground(Color.WHITE); // 👈 también blanco
+gbc.gridx = 1; formPanel.add(btnFoto, gbc);
+
+// Status debajo del botón
+gbc.gridx = 1; gbc.gridy = 7;
+formPanel.add(lblFotoStatus, gbc);
+
+// Preview debajo de todo el formulario
+lblFotoPreview = new JLabel();
+lblFotoPreview.setPreferredSize(new Dimension(150, 150));
+lblFotoPreview.setHorizontalAlignment(JLabel.CENTER);
+lblFotoPreview.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+gbc.gridx = 0; gbc.gridy = 8; gbc.gridwidth = 2;
+gbc.anchor = GridBagConstraints.CENTER;
+formPanel.add(lblFotoPreview, gbc);
+
+// Botones
+JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 15, 0));
+buttonPanel.setOpaque(false);
+
 
         btnRegistrar = new JButton("Registrar");
         btnRegistrar.setBackground(new Color(67, 181, 129));
