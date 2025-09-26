@@ -249,8 +249,8 @@ public class Steam {
                 gamesFile.writeDouble(newPrice);
                 return true;
             }
-            gamesFile.readInt();//descargas ///////////////////
-            int imgSize = gamesFile.readInt();
+            gamesFile.readInt();//descargas
+            int imgSize = gamesFile.readInt();//skip de imagen y tamaño segun 
             gamesFile.skipBytes(imgSize);
         }
         return false;
