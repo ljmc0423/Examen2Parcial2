@@ -73,7 +73,7 @@ public class LoginFrame extends JFrame {
         add(mainPanel);
 
         // Eventos
-        btnLogin.addActionListener(e -> login());
+        btnLogin.addActionListener(e -> new AdminFrame(steam).setVisible(true));
         btnRegister.addActionListener(e -> new RegisterFrame(steam).setVisible(true));
     }
 

@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
 public class AdminFrame extends JFrame {
-    private JButton btnGames, btnPlayers, btnReports, btnCatalog;
+    private JButton btnGames, btnPlayers, btnReports, btnCatalog, btnRegresar;
     private Steam steam;
 
     public AdminFrame(Steam steam) {
@@ -79,16 +79,24 @@ public class AdminFrame extends JFrame {
         panel.add(lblTitle, gbc);
 
         // ==== Botones ====
-        btnGames   = createModernButton("🎮 Gestión Juegos", new Color(67, 181, 129));
-        btnPlayers = createModernButton("👤 Gestión Jugadores", new Color(102, 192, 244));
-        btnReports = createModernButton("📑 Reportes Clientes", new Color(220, 120, 85));
-        btnCatalog = createModernButton("📚 Ver Catálogo", new Color(123, 104, 238));
+        btnGames   = createModernButton("Gestión Juegos", new Color(67, 181, 129));
+        btnPlayers = createModernButton("Gestión Jugadores", new Color(102, 192, 244));
+        btnReports = createModernButton("Reportes Clientes", new Color(220, 120, 85));
+        btnCatalog = createModernButton("Ver Catálogo", new Color(123, 104, 238));
+        btnRegresar = createModernButton("Regresar", new Color(255, 255, 255));
+        
 
         gbc.gridwidth = 1;
         gbc.gridy = 1; gbc.gridx = 0; panel.add(btnGames, gbc);
         gbc.gridy = 1; gbc.gridx = 1; panel.add(btnPlayers, gbc);
         gbc.gridy = 2; gbc.gridx = 0; panel.add(btnReports, gbc);
         gbc.gridy = 2; gbc.gridx = 1; panel.add(btnCatalog, gbc);
+
+        // Add the "Regresar" button in a new row spanning both columns
+        gbc.gridwidth = 2;
+        gbc.gridy = 3;
+        gbc.gridx = 0;
+        panel.add(btnRegresar, gbc);
 
         mainPanel.add(panel);
         add(mainPanel);
