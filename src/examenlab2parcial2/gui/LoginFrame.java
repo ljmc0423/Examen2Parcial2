@@ -23,7 +23,7 @@ public class LoginFrame extends JFrame {
     public LoginFrame(Steam steam) {
         this.steam = steam;
         setTitle("Steam - Login");
-        setSize(550, 450);
+        setSize(550, 500); // Aumenté un poco la altura
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -82,12 +82,31 @@ public class LoginFrame extends JFrame {
         formPanel.setOpaque(false);
         formPanel.setLayout(new GridBagLayout());
         formPanel.setBorder(new EmptyBorder(40, 40, 40, 40));
-        formPanel.setPreferredSize(new Dimension(400, 350));
+        formPanel.setPreferredSize(new Dimension(400, 400));
         
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(15, 15, 15, 15);
         
-        // Logo/Título con efecto Steam
+        // Panel del header con logo y título
+        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        headerPanel.setOpaque(false);
+        
+        // Cargar y redimensionar el logo
+        JLabel lblLogo = new JLabel();
+        try {
+            ImageIcon originalIcon = new ImageIcon(getClass().getResource("/examenlab2parcial2/res/LogoSteam.png\""));
+            Image img = originalIcon.getImage();
+            Image scaledImg = img.getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+            lblLogo.setIcon(new ImageIcon(scaledImg));
+        } catch (Exception e) {
+            // Si no se puede cargar la imagen, mostrar un texto alternativo
+            System.out.println(e.getMessage());
+            lblLogo.setText("🎮");
+            lblLogo.setFont(new Font("Segoe UI", Font.PLAIN, 30));
+            lblLogo.setForeground(new Color(102, 192, 244));
+        }
+        
+        // Título con efecto Steam
         JLabel lblTitle = new JLabel("STEAM") {
             @Override
             protected void paintComponent(Graphics g) {
@@ -114,11 +133,14 @@ public class LoginFrame extends JFrame {
         };
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 32));
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-        lblTitle.setPreferredSize(new Dimension(200, 50));
+        lblTitle.setPreferredSize(new Dimension(150, 50));
+        
+        headerPanel.add(lblLogo);
+        headerPanel.add(lblTitle);
         
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-        formPanel.add(lblTitle, gbc);
+        formPanel.add(headerPanel, gbc);
         
         // Subtítulo
         JLabel lblSubtitle = new JLabel("LOGIN");
@@ -155,9 +177,10 @@ public class LoginFrame extends JFrame {
         gbc.insets = new Insets(20, 15, 10, 15);
         formPanel.add(Box.createVerticalStrut(10), gbc);
         
-        // Panel de botones
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        // Panel de botones con GridLayout para alineación perfecta
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 15, 0));
         buttonPanel.setOpaque(false);
+        buttonPanel.setPreferredSize(new Dimension(300, 45));
         
         btnLogin = createModernButton("Entrar", new Color(76, 175, 80), new Color(56, 142, 60));
         btnRegister = createModernButton("Registrar", new Color(102, 192, 244), new Color(68, 138, 255));
@@ -167,6 +190,7 @@ public class LoginFrame extends JFrame {
         
         gbc.gridy = 5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.CENTER;
         formPanel.add(buttonPanel, gbc);
         
         // Agregar panel al main
@@ -190,8 +214,6 @@ public class LoginFrame extends JFrame {
     
     private JTextField createModernTextField(String placeholder) {
         JTextField field = new JTextField(20) {
-            private boolean showingPlaceholder = true;
-            
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g;
@@ -340,20 +362,20 @@ public class LoginFrame extends JFrame {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        button.setPreferredSize(new Dimension(120, 40));
+        button.setPreferredSize(new Dimension(140, 40)); // Aumenté el ancho
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
         // Efectos hover
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                ((JButton)e.getSource()).putClientProperty("isHovered", true);
+                button.putClientProperty("isHovered", true);
                 button.repaint();
             }
             
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                ((JButton)e.getSource()).putClientProperty("isHovered", false);
+                button.putClientProperty("isHovered", false);
                 button.repaint();
             }
         });
